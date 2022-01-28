@@ -5,7 +5,7 @@ const socketio = require('socket.io');
 
 const app = express();
 const server = http.createServer(app);
-const io =socketio(server);
+const io = socketio(server);
 
 const port = process.env.PORT || 3000
 
@@ -14,25 +14,27 @@ const pathDir = path.join(__dirname, '../public');
 app.use(express.static(pathDir));
 
 
-app.get('/', (req, res)=>{
+app.get('/', (req, res) => {
     res.render('index');
 })
 
-io.on('connection', (socket)=>{
+io.on('connection', (socket) => {
     console.log('New connection');
 
     socket.emit('message', "Welcome!");
-    // socket.emit('countup', count);
 
-    // socket.on('countincr', ()=>{
-    //     count++;
-    //     io.emit('countup', count);
-    // })
-    socket.on('sendMessage', (msg)=>{
+    socket.broadcast.emit('message', "A new user has joined");
+
+    socket.on('sendMessage', (msg) => {
         io.emit('message', msg)
     })
+
+    socket.on('disconnect', () => {
+        io.emit('message', 'A user has left the chat |><|');
+    })
+
 })
 
-server.listen(port, ()=>{
+server.listen(port, () => {
     console.log(`The server is up and running at ${port}`);
 })
