@@ -25,12 +25,15 @@ io.on('connection', (socket) => {
 
     socket.broadcast.emit('message', "A new user has joined");
 
-    socket.on('sendMessage', (msg) => {
-        io.emit('message', msg)
+    socket.on('sendMessage', (msg, callback) => {
+        io.emit('message', msg);
+        callback();
     })
 
-    socket.on('sendLocation', (position)=>{
+    socket.on('sendLocation', (position, callback)=>{
         io.emit('message', `https://google.com/maps?q=${position.latitude},${position.longitude}`)
+
+        callback();
     })
 
     socket.on('disconnect', () => {

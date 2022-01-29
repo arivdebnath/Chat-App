@@ -1,13 +1,5 @@
 const socket = io();
 
-// socket.on('countup', (count) => {
-//     console.log('received your bs', count);
-// })
-
-// document.querySelector('#incr').addEventListener("click", () => {
-//     socket.emit('countincr');
-// })
-
 socket.on('message', (message) => {
     console.log(message);
 })
@@ -17,7 +9,12 @@ document.querySelector('#message-form').addEventListener('submit', (e) => {
 
     const message = e.target.elements.message.value;
 
-    socket.emit('sendMessage', message);
+    socket.emit('sendMessage', message, (error) => {
+        if(error){
+           return console.log(error);
+        }
+        console.log('confirmation received');
+    });
 })
 
 document.querySelector('#location-btn').addEventListener('click', () => {
@@ -28,6 +25,11 @@ document.querySelector('#location-btn').addEventListener('click', () => {
         socket.emit('sendLocation', {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
+        }, (error)=>{
+            if(error){
+                return console.log(error);
+            }
+            console.log('location shared');
         });
     })
 })
