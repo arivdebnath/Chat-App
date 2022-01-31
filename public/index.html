@@ -1,22 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat App</title>
 </head>
+
 <body>
     <h1>Test Page</h1>
-    
+    <div id="messages"></div>
+
     <button id="incr">+1 click</button>
     <form id="message-form">
         <input type="text" name="message" id="txi">
         <button id="btx">SEND</button>
     </form>
     <button id="location-btn">Share Location</button>
+    <script id="message-template" type='text/html'>
+        <div>
+            <p>{{message}}</p>
+        </div>
+    </script>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.1/mustache.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.6.0/qs.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="/js/chat.js"></script>
 </body>
+
 </html>
