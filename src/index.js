@@ -2,10 +2,12 @@ const express = require('express');
 const http = require('http');
 const path = require('path');
 const socketio = require('socket.io');
+const { generateMessage } = require('./utils/genMessage');
 
 const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
+
 
 const port = process.env.PORT || 3000
 
@@ -21,12 +23,12 @@ app.get('/', (req, res) => {
 io.on('connection', (socket) => {
     console.log('New connection');
 
-    socket.emit('message', "Welcome!");
+    socket.emit('message',generateMessage("Welcome!"));
 
-    socket.broadcast.emit('message', "A new user has joined");
+    socket.broadcast.emit('message',generateMessage("A new user has joined"));
 
     socket.on('sendMessage', (msg, callback) => {
-        io.emit('message', msg);
+        io.emit('message',generateMessage(msg));
         callback();
     })
 
@@ -37,7 +39,7 @@ io.on('connection', (socket) => {
     })
 
     socket.on('disconnect', () => {
-        io.emit('message', 'A user has left the chat |><|');
+        io.emit('message', generateMessage( 'A user has left the chat |><|' ));
     })
 
 })
