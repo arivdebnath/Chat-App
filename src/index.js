@@ -23,23 +23,26 @@ app.get('/', (req, res) => {
 io.on('connection', (socket) => {
     console.log('New connection');
 
-    socket.emit('message',generateMessage("Welcome!"));
+    socket.on('join', ({ username, roomname }) => {
+        socket.join(roomname);
 
-    socket.broadcast.emit('message',generateMessage("A new user has joined"));
+        socket.emit('message', generateMessage("Welcome!"));
+        socket.broadcast.to(roomname).emit('message', generateMessage(`${username} has joined`));
+    })
 
     socket.on('sendMessage', (msg, callback) => {
-        io.emit('message',generateMessage(msg));
+        io.to(roomname).emit('message', generateMessage(msg));
         callback();
     })
 
-    socket.on('sendLocation', (position, callback)=>{
+    socket.on('sendLocation', (position, callback) => {
         // io.emit('message', `https://google.com/maps?q=${position.latitude},${position.longitude}`)
-        io.emit('locationMessage',generateLocationMessage(  `https://google.com/maps?q=${position.latitude},${position.longitude}` ));
+        io.emit('locationMessage', generateLocationMessage(`https://google.com/maps?q=${position.latitude},${position.longitude}`));
         callback();
     })
 
     socket.on('disconnect', () => {
-        io.emit('message', generateMessage( 'A user has left the chat |><|' ));
+        io.emit('message', generateMessage('A user has left the chat |><|'));
     })
 
 })

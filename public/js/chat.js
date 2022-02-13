@@ -77,3 +77,5 @@ locationButton.addEventListener('click', () => {
         });
     })
 })
+
+socket.emit('join', {username, roomname});
