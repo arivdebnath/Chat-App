@@ -18,6 +18,7 @@ socket.on('message', (message) => {
     console.log(message);
     
     const html = Mustache.render(messageTemplate, {
+        username: message.username,
         message: message.message,
         createdAt: moment(message.createdAt).format("h:mm:ss a"),
     });
@@ -28,6 +29,7 @@ socket.on('locationMessage', ( locationLink )=>{
     console.log(locationLink);
 
     const html = Mustache.render(locationTemplate, {
+        username: locationLink.username,
         URL: locationLink.url,
         createdAt: moment(locationLink.createdAt).format("h:mm:ss a"),
     });
@@ -78,4 +80,9 @@ locationButton.addEventListener('click', () => {
     })
 })
 
-socket.emit('join', {username, roomname});
+socket.emit('join', {username, roomname}, (error)=>{
+    if(error){
+        alert(error);
+        location.href = '/';
+    }
+});

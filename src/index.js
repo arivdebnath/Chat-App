@@ -3,6 +3,7 @@ const http = require('http');
 const path = require('path');
 const socketio = require('socket.io');
 const { generateMessage, generateLocationMessage } = require('./utils/genMessage');
+const { addUser, removeUser, getUser, getUserInRoom } = require('./utils/users');
 
 const app = express();
 const server = http.createServer(app);
@@ -23,26 +24,48 @@ app.get('/', (req, res) => {
 io.on('connection', (socket) => {
     console.log('New connection');
 
-    socket.on('join', ({ username, roomname }) => {
-        socket.join(roomname);
+    socket.on('join', ({ username, roomname }, callback) => {
+        const { error, user } = addUser({
+            id: socket.id,
+            username,
+            roomname
+        })
+
+        if (error) {
+            callback(error);
+        }
+
+        socket.join(user.roomname);
 
         socket.emit('message', generateMessage("Welcome!"));
-        socket.broadcast.to(roomname).emit('message', generateMessage(`${username} has joined`));
+        socket.broadcast.to(user.roomname).emit('message', generateMessage(`${user.username} has joined`));
+
+        callback();
     })
 
     socket.on('sendMessage', (msg, callback) => {
-        io.to(roomname).emit('message', generateMessage(msg));
+
+        const user = getUser(socket.id);
+        
+        io.to(user.roomname).emit('message', generateMessage(user.username, msg));
         callback();
     })
 
     socket.on('sendLocation', (position, callback) => {
         // io.emit('message', `https://google.com/maps?q=${position.latitude},${position.longitude}`)
-        io.emit('locationMessage', generateLocationMessage(`https://google.com/maps?q=${position.latitude},${position.longitude}`));
+
+        const user = getUser(socket.id);
+
+        io.to(user.roomname).emit('locationMessage', generateLocationMessage(user.username,`https://google.com/maps?q=${position.latitude},${position.longitude}`));
         callback();
     })
 
     socket.on('disconnect', () => {
-        io.emit('message', generateMessage('A user has left the chat |><|'));
+        const user = removeUser(socket.id);
+
+        if (user) {
+            io.to(user.roomname).emit('message', generateMessage(`${user.username} has left the chat |><|`));
+        }
     })
 
 })

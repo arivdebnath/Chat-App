@@ -42,6 +42,7 @@ const getUser = (id) => {
 }
 
 const getUserInRoom = (roomname) => {
+    roomname = roomname.trim();
     const userList = users.filter((user) => {
         if (user.roomname===roomname){
             return user;
@@ -50,3 +51,10 @@ const getUserInRoom = (roomname) => {
 
     return userList;
 }
+
+module.exports = {
+    addUser,
+    removeUser,
+    getUser,
+    getUserInRoom,
+};
