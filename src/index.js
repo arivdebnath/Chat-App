@@ -1,3 +1,4 @@
+const { doesNotMatch } = require('assert');
 const express = require('express');
 const http = require('http');
 const path = require('path');
@@ -32,14 +33,17 @@ io.on('connection', (socket) => {
         })
 
         if (error) {
-            callback(error);
+            return callback(error);
         }
 
         socket.join(user.roomname);
 
         socket.emit('message', generateMessage("Welcome!"));
         socket.broadcast.to(user.roomname).emit('message', generateMessage(`${user.username} has joined`));
-
+        io.to(user.roomname).emit('roomData', {
+            roomname: user.roomname,
+            userList: getUserInRoom(user.roomname),
+        })
         callback();
     })
 
@@ -59,12 +63,17 @@ io.on('connection', (socket) => {
         io.to(user.roomname).emit('locationMessage', generateLocationMessage(user.username,`https://google.com/maps?q=${position.latitude},${position.longitude}`));
         callback();
     })
+    
 
     socket.on('disconnect', () => {
         const user = removeUser(socket.id);
 
         if (user) {
             io.to(user.roomname).emit('message', generateMessage(`${user.username} has left the chat |><|`));
+            io.to(user.roomname).emit('roomData', {
+                roomname: user.roomname,
+                userList: getUserInRoom(user.roomname),
+            })
         }
     })
 
