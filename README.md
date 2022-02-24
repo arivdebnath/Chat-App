@@ -4,4 +4,4 @@ _____________________________
 ## To Be Added or Updated
 - [ ] End to End Encryption
 - [ ] File sharing support
-- [ ] Better UI
+- [ ] *Better UI*
