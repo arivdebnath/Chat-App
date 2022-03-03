@@ -6,3 +6,4 @@ This is a simple chat application built using socket.io. It contains the locatio
 - [ ] End to End Encryption
 - [ ] File sharing support
 - [ ] *Better UI*
+- [ ] Deploy to heroku
