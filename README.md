@@ -5,5 +5,5 @@ This is a simple chat application built using socket.io. It contains the locatio
 ## To Be Added or Updated
 - [ ] End to End Encryption
 - [ ] File sharing support
-- [ ] *Better UI* or rebuilt the frontend using a Javascript library
+- [ ] *Better UI* or rebuild the frontend using a Javascript library
 - [ ] Deploy to heroku
