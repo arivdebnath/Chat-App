@@ -3,7 +3,8 @@ This is a simple chat application built using socket.io. It contains location sh
 
 
 ## To Be Added or Updated
-- [ ] End to End Encryption
+- [ ] Add End to End Encryption
 - [ ] File sharing support
 - [ ] *Better UI* or rebuild the frontend using a Javascript library
+  - [ ] Add dark mode
 - [ ] Deploy to heroku
